@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Jokes API + Fetch</title>
+  <title>Advice API + Fetch</title>
   <style>
     body {
       font-family: 'Courier New', monospace;
@@ -41,8 +41,10 @@
     const advice_container_element = document.getElementById('advice-container');
     const advice_search_bar = document.getElementById('advice-search-bar');
     const query = advice_search_bar.value.trim();
+    const query_data = query.split(' ');
+    const selected_random_word = query_data[Math.floor(Math.random() * query_data.length)];
     try {
-      const url = new URL(`${baseUrl}/${query}`);
+      const url = new URL(`${baseUrl}/${selected_random_word}`);
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -63,7 +65,7 @@
         advice_container_element.innerHTML = `Error, can't find addice for this query`;
       }
     } catch (error) {
-      advice_container_element.innerHTML = `Error to get an advice: ${error}`;
+      advice_container_element.innerHTML = `${error}`;
     }
   }
 
