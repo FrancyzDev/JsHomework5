@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Jokes API + Fetch</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #121212;
+      color: #ffffff;
+      padding: 2rem;
+      margin: 0;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 10px;
+      border-radius: 5px;
+      border: none;
+      background-color: #1db954;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #1ed760;
+    }
+  </style>
+</head>
+<body>
+<div id="advice-container"></div>
+<div>
+  <label for="advice-search-bar">
+    <input id="advice-search-bar" type="text" placeholder="Введiть запит">
+  </label>
+  <button id="advice-search-button">Зробити запит</button>
+</div>
+<script>
+  const baseUrl = 'https://api.adviceslip.com/advice/search';
+
+  async function displayAdvice() {
+    const advice_container_element = document.getElementById('advice-container');
+    const advice_search_bar = document.getElementById('advice-search-bar');
+    const query = advice_search_bar.value.trim();
+    try {
+      const url = new URL(`${baseUrl}/${query}`);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP помилка: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const slips = data.slips;
+      if (slips != null) {
+        advice_container_element.innerHTML = slips[Math.floor(Math.random() * slips.length)].advice;
+      }
+      else {
+        advice_container_element.innerHTML = `Error, can't find addice for this query`;
+      }
+    } catch (error) {
+      advice_container_element.innerHTML = `Error to get an advice: ${error}`;
+    }
+  }
+
+  button = document.getElementById('advice-search-button');
+  button.addEventListener('click', displayAdvice)
+</script>
+</body>
+</html>
